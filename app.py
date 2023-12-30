@@ -8,30 +8,32 @@ def create_file(content="", title="Untitled"):
     container = ttk.Frame(notebook)
     container.pack()
 
-    text_area = tk.Text(container) # creates a text widget inside the container frame
-    text_area.insert("end", content) # if there is content, i.e. via the open_file function inserts it
-    text_area.pack(side="left", fill="both", expand=True) # filling the left space
+    text_area = tk.Text(container)
+    text_area.insert("end", content)
+    text_area.pack(side="left", fill="both", expand=True)
     
-    notebook.add(container, text=title) # adds a tab to the notebook, linking it to the container
+    notebook.add(container, text=title)
     notebook.select(container)
 
-    text_contents[str(text_area)] = hash(content) # hashing the contents (to a shorter length to allow comparison for unsaved changes)
 
-    text_scroll = ttk.Scrollbar(container, orient="vertical", command=text_area.yview) # putting the ScrollBar in the container Frame, vertical orientation and setting it to scroll the y vertical view
+# hashing the contents (to a shorter length to allow comparison for unsaved changes)
+    text_contents[str(text_area)] = hash(content)
+
+    text_scroll = ttk.Scrollbar(container, orient="vertical", command=text_area.yview)
     text_scroll.pack(side="right", fill="y")
     text_area["yscrollcommand"] = text_scroll.set
 
 
 def check_for_changes():
-    current = get_text_widget() # get the currently selected text widget
+    current = get_text_widget()
 
-    content = current.get("1.0", "end-1c") # get current's content
-    name = notebook.tab("current")["text"] # get current tab's label
+    content = current.get("1.0", "end-1c") 
+    name = notebook.tab("current")["text"]
 
     if hash(content) != text_contents[str(current)]:
         if name[-1] != "*":
             notebook.tab("current", text=name + "*") # if the hashes between original and new are different, adds a * to the end
-    elif name[-1] == "*": # if contents are the same and there is a * at the end need to remove it
+    elif name[-1] == "*": # if contents are the same and there is a * at the end, need to remove it
         notebook.tab("current", text=name[:-1]) 
 
 
@@ -62,15 +64,15 @@ def confirm_close():
 
 
 def close_current_tab():
-    if current_tab_unsaved() and not confirm_close(): # is unsaved and confirm close is no, close current tab
+    if current_tab_unsaved() and not confirm_close():
         return
 
     current= get_current_tab()
     
     if len(notebook.tabs()) == 1:
-        create_file() # if there is only 1 tab opep, creating a new one so that when we forget below it still looks okay
+        create_file() #
     
-    notebook.forget(current) # closes current tab in all other situations
+    notebook.forget(current)
 
 
 def confirm_quit():
@@ -87,29 +89,28 @@ def confirm_quit():
             break
         
     if unsaved and not confirm_close(): 
-        return # if they don't confirm, return i.e. don't quit the program
+        return
     
-    root.destroy() # if they do confirm, ends the app
+    root.destroy()
 
 
 def save_file():
-    file_path = filedialog.asksaveasfilename() # asks user where to save (opens windows options)
-    # e.g. /Users/paul/file.txt
+    file_path = filedialog.asksaveasfilename()
 
     try:
-        filename = os.path.basename(file_path) # above e.g. gives you file.txt
-        text_widget = get_text_widget() # selects the current notebook textfield, to get the content below
+        filename = os.path.basename(file_path) 
+        text_widget = get_text_widget()
 
-        content = text_widget.get("1.0", "end-1c") # selects all content from the text_widget, removing the last character (which would be a \n)
+        content = text_widget.get("1.0", "end-1c")
 
         with open(file_path, "w") as file:
-            file.write(content) #opens full file path in writing mode, writing all the contents from the text_widget
+            file.write(content)
     
     except (AttributeError, FileNotFoundError):
         print(f' save operation unsuccessful')
         return
 
-    notebook.tab("current", text=filename) # renames current tab to the filename e.g. file.txt
+    notebook.tab("current", text=filename)
 
     text_contents[str(text_widget)] = hash(content)
 
@@ -118,16 +119,16 @@ def open_file():
     file_path = filedialog.askopenfilename()
 
     try:
-        filename = os.path.basename(file_path) # above e.g. gives you file.txt
+        filename = os.path.basename(file_path)
             
         with open(file_path, "r") as file:
-            content = file.read() # read the file contents
+            content = file.read()
     
     except (AttributeError, FileNotFoundError):
         print(f' open operation unsuccessful')
         return
 
-    create_file(content, filename) # creating a new file / tab with the file contents
+    create_file(content, filename)
 
 
 def show_about_info():
@@ -141,19 +142,23 @@ root = tk.Tk()
 root.title("Text Editor")
 root.option_add("*tearOff", False) # disables tear-off feature for menus (where it could be torn off into a separate window)
 
+
 # configuring main frame
 
 main = ttk.Frame(root)
 main.pack(fill="both", expand=True, padx=8, pady=8)
+
 
 # creating and configuring menu bar
 
 menubar = tk.Menu()
 root.config(menu=menubar) 
 
+
 # creating the notebook widget and packing it into the main frame
 notebook = ttk.Notebook(main)
 notebook.pack(fill="both", expand=True)
+
 
 # dropdown of menu elements
 
