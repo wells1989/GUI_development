@@ -164,23 +164,22 @@ notebook.pack(fill="both", expand=True)
 
 file_menu = tk.Menu(menubar)
 help_menu = tk.Menu(menubar)
-menubar.add_cascade(menu=file_menu, label="File") # creating Menu dropdown button
+menubar.add_cascade(menu=file_menu, label="File")
 menubar.add_cascade(menu=help_menu, label="Help")
 
 help_menu.add_command(label="About", command=show_about_info)
 
-file_menu.add_command(label="New", command=create_file, accelerator="Ctrl+N") # option in the menu dropdown, calling the create_file function
-file_menu.add_command(label="Open", command=open_file, accelerator="Ctrl+O") # option in the menu dropdown, calling the open_file function
-file_menu.add_command(label="Save", command=save_file, accelerator="Ctrl+S") # option in the menu dropdown, calling the save_file function
+file_menu.add_command(label="New", command=create_file, accelerator="Ctrl+N") 
+file_menu.add_command(label="Open", command=open_file, accelerator="Ctrl+O") 
+file_menu.add_command(label="Save", command=save_file, accelerator="Ctrl+S") 
 file_menu.add_command(label="Close tab", command=close_current_tab, accelerator = "Ctrl+Q")
 file_menu.add_command(label="Exit", command=confirm_quit)
 
 create_file()
 
 root.bind("<KeyPress>", lambda event: check_for_changes())
-root.bind("<Control-n>", lambda event: create_file()) # binding shortcut to the root window, linking the shortcut to the create_file function
-# above we are defining a function, NOT calling it
-root.bind("<Control-o>", lambda event: open_file()) # binding shortcut to the root window, linking the shortcut to the create_file function
+root.bind("<Control-n>", lambda event: create_file()) 
+root.bind("<Control-o>", lambda event: open_file())
 root.bind("<Control-s>", lambda event: save_file())
 root.bind("<Control-q>", lambda event: close_current_tab())
 
